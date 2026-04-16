@@ -1,0 +1,111 @@
+Frame 6: Packet, 82 bytes on wire (656 bits), 82 bytes captured (656 bits) on interface \Device\NPF_{F1FE4270-B104-4C83-B2F3-362E7BFB456E}, id 0
+    Section number: 1
+    Interface id: 0 (\Device\NPF_{F1FE4270-B104-4C83-B2F3-362E7BFB456E})
+        Interface name: \Device\NPF_{F1FE4270-B104-4C83-B2F3-362E7BFB456E}
+        Interface description: Ethernet
+    Encapsulation type: Ethernet (1)
+    Arrival Time: Apr 16, 2026 02:14:06.478871100 Eastern Daylight Time
+    UTC Arrival Time: Apr 16, 2026 06:14:06.478871100 UTC
+    Epoch Arrival Time: 1776320046.478871100
+    [Time shift for this packet: 0.000000000 seconds]
+    [Time delta from previous captured frame: 55.200 microseconds]
+    [Time delta from previous displayed frame: 55.200 microseconds]
+    [Time since reference or first frame: 4.214000 milliseconds]
+    Frame Number: 6
+    Frame Length: 82 bytes (656 bits)
+    Capture Length: 82 bytes (656 bits)
+    [Frame is marked: False]
+    [Frame is ignored: False]
+    [Protocols in frame: eth:ethertype:ip:tcp:enip]
+    Character encoding: ASCII (0)
+    [Coloring Rule Name: TCP]
+    [Coloring Rule String: tcp]
+Ethernet II, Src: ASUSTekCOMPU_c7:20:90 (08:bf:b8:c7:20:90), Dst: HMSIndustria_7b:54:0a (00:30:11:7b:54:0a)
+    Destination: HMSIndustria_7b:54:0a (00:30:11:7b:54:0a)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: ASUSTekCOMPU_c7:20:90 (08:bf:b8:c7:20:90)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+    [Stream index: 0]
+Internet Protocol Version 4, Src: 192.168.1.2, Dst: 192.168.1.4
+    0100 .... = Version: 4
+    .... 0101 = Header Length: 20 bytes (5)
+    Differentiated Services Field: 0x00 (DSCP: CS0, ECN: Not-ECT)
+        0000 00.. = Differentiated Services Codepoint: Default (0)
+        .... ..00 = Explicit Congestion Notification: Not ECN-Capable Transport (0)
+    Total Length: 68
+    Identification: 0xb2f4 (45812)
+    010. .... = Flags: 0x2, Don't fragment
+        0... .... = Reserved bit: Not set
+        .1.. .... = Don't fragment: Set
+        ..0. .... = More fragments: Not set
+    ...0 0000 0000 0000 = Fragment Offset: 0
+    Time to Live: 128
+    Protocol: TCP (6)
+    Header Checksum: 0x0000 [validation disabled]
+    [Header checksum status: Unverified]
+    Source Address: 192.168.1.2
+    Destination Address: 192.168.1.4
+    [Stream index: 0]
+Transmission Control Protocol, Src Port: 43073, Dst Port: 44818, Seq: 1, Ack: 1, Len: 28
+    Source Port: 43073
+    Destination Port: 44818
+    [Stream index: 0]
+    [Stream Packet Number: 4]
+    [Conversation completeness: Complete, WITH_DATA (63)]
+        ..1. .... = RST: Present
+        ...1 .... = FIN: Present
+        .... 1... = Data: Present
+        .... .1.. = ACK: Present
+        .... ..1. = SYN-ACK: Present
+        .... ...1 = SYN: Present
+        [Completeness Flags: RFDASS]
+    [TCP Segment Len: 28]
+    Sequence Number: 1    (relative sequence number)
+    Sequence Number (raw): 2658536256
+    [Next Sequence Number: 29    (relative sequence number)]
+    Acknowledgment Number: 1    (relative ack number)
+    Acknowledgment number (raw): 2372700
+    0101 .... = Header Length: 20 bytes (5)
+    Flags: 0x018 (PSH, ACK)
+        000. .... .... = Reserved: Not set
+        ...0 .... .... = Accurate ECN: Not set
+        .... 0... .... = Congestion Window Reduced: Not set
+        .... .0.. .... = ECN-Echo: Not set
+        .... ..0. .... = Urgent: Not set
+        .... ...1 .... = Acknowledgment: Set
+        .... .... 1... = Push: Set
+        .... .... .0.. = Reset: Not set
+        .... .... ..0. = Syn: Not set
+        .... .... ...0 = Fin: Not set
+        [TCP Flags: ·······AP···]
+    Window: 65535
+    [Calculated window size: 65535]
+    [Window size scaling factor: -2 (no window scaling used)]
+    Checksum: 0x838d [unverified]
+    [Checksum Status: Unverified]
+    Urgent Pointer: 0
+    [Timestamps]
+        [Time since first frame in this TCP stream: 4.214000 milliseconds]
+        [Time since previous frame in this TCP stream: 55.200 microseconds]
+    [SEQ/ACK analysis]
+        [iRTT: 4.158800 milliseconds]
+        [Bytes in flight: 28]
+        [Bytes sent since last PSH flag: 28]
+    [Client Contiguous Streams: 1]
+    [Server Contiguous Streams: 1]
+    TCP payload (28 bytes)
+    [PDU Size: 28]
+EtherNet/IP (Industrial Protocol), Session: 0x00000000, Register Session
+    Encapsulation Header
+        Command: Register Session (0x0065)
+        Length: 4
+        Session Handle: 0x00000000
+        Status: Success (0x00000000)
+        Sender Context: 0000000000000000
+        Options: 0x00000000
+    Command Specific Data
+        Protocol Version: 1
+        Option Flags: 0x0000

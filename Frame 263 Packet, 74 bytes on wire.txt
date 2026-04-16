@@ -1,0 +1,105 @@
+Frame 263: Packet, 74 bytes on wire (592 bits), 74 bytes captured (592 bits) on interface \Device\NPF_{F1FE4270-B104-4C83-B2F3-362E7BFB456E}, id 0
+    Section number: 1
+    Interface id: 0 (\Device\NPF_{F1FE4270-B104-4C83-B2F3-362E7BFB456E})
+        Interface name: \Device\NPF_{F1FE4270-B104-4C83-B2F3-362E7BFB456E}
+        Interface description: Ethernet
+    Encapsulation type: Ethernet (1)
+    Arrival Time: Apr 16, 2026 02:14:26.774919500 Eastern Daylight Time
+    UTC Arrival Time: Apr 16, 2026 06:14:26.774919500 UTC
+    Epoch Arrival Time: 1776320066.774919500
+    [Time shift for this packet: 0.000000000 seconds]
+    [Time delta from previous captured frame: 278.700 microseconds]
+    [Time delta from previous displayed frame: 278.700 microseconds]
+    [Time since reference or first frame: 20.300262400 seconds]
+    Frame Number: 263
+    Frame Length: 74 bytes (592 bits)
+    Capture Length: 74 bytes (592 bits)
+    [Frame is marked: False]
+    [Frame is ignored: False]
+    [Protocols in frame: eth:ethertype:ip:udp:enip:cipio]
+    Character encoding: ASCII (0)
+    [Coloring Rule Name: UDP]
+    [Coloring Rule String: udp]
+Ethernet II, Src: ASUSTekCOMPU_c7:20:90 (08:bf:b8:c7:20:90), Dst: HMSIndustria_7b:54:0a (00:30:11:7b:54:0a)
+    Destination: HMSIndustria_7b:54:0a (00:30:11:7b:54:0a)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: ASUSTekCOMPU_c7:20:90 (08:bf:b8:c7:20:90)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+    [Stream index: 0]
+Internet Protocol Version 4, Src: 192.168.1.2, Dst: 192.168.1.4
+    0100 .... = Version: 4
+    .... 0101 = Header Length: 20 bytes (5)
+    Differentiated Services Field: 0x00 (DSCP: CS0, ECN: Not-ECT)
+        0000 00.. = Differentiated Services Codepoint: Default (0)
+        .... ..00 = Explicit Congestion Notification: Not ECN-Capable Transport (0)
+    Total Length: 60
+    Identification: 0xb36f (45935)
+    000. .... = Flags: 0x0
+        0... .... = Reserved bit: Not set
+        .0.. .... = Don't fragment: Not set
+        ..0. .... = More fragments: Not set
+    ...0 0000 0000 0000 = Fragment Offset: 0
+    Time to Live: 128
+    Protocol: UDP (17)
+    Header Checksum: 0x0000 [validation disabled]
+    [Header checksum status: Unverified]
+    Source Address: 192.168.1.2
+    Destination Address: 192.168.1.4
+    [Stream index: 0]
+User Datagram Protocol, Src Port: 64192, Dst Port: 2222
+    Source Port: 64192
+    Destination Port: 2222
+    Length: 40
+    Checksum: 0x8390 [unverified]
+    [Checksum Status: Unverified]
+    [Stream index: 1]
+    [Stream Packet Number: 118]
+    [Timestamps]
+        [Time since first frame: 12.875519400 seconds]
+        [Time since previous frame: 113.622800 milliseconds]
+    UDP payload (32 bytes)
+EtherNet/IP (Industrial Protocol)
+    Item Count: 2
+        Type ID: Sequenced Address Item (0x8002)
+            Length: 8
+            Connection ID: 0x926c0121
+            Encapsulation Sequence Number: 117
+        Type ID: Connected Data Item (0x00b1)
+            Length: 14
+    [Connection Information: O->T]
+        [CIP Connection Index: 0]
+        [Forward Open Connection Path: Assembly, Instance: 0x01, Connection Point: 0x96, Connection Point: 0x64]
+            [Path Segment: 0x20 (8-Bit Class Segment)]
+                [001. .... = Path Segment Type: Logical Segment (1)]
+                [...0 00.. = Logical Segment Type: Class ID (0)]
+                [.... ..00 = Logical Segment Format: 8-bit Logical Segment (0)]
+                [Class: Assembly (0x04)]
+            [Path Segment: 0x24 (8-Bit Instance Segment)]
+                [001. .... = Path Segment Type: Logical Segment (1)]
+                [...0 01.. = Logical Segment Type: Instance ID (1)]
+                [.... ..00 = Logical Segment Format: 8-bit Logical Segment (0)]
+                [Instance: 0x01]
+            [Path Segment: 0x2c (8-Bit Connection Point Segment)]
+                [001. .... = Path Segment Type: Logical Segment (1)]
+                [...0 11.. = Logical Segment Type: Connection Point (3)]
+                [.... ..00 = Logical Segment Format: 8-bit Logical Segment (0)]
+                [Connection Point: 0x96]
+            [Path Segment: 0x2c (8-Bit Connection Point Segment)]
+                [001. .... = Path Segment Type: Logical Segment (1)]
+                [...0 11.. = Logical Segment Type: Connection Point (3)]
+                [.... ..00 = Logical Segment Format: 8-bit Logical Segment (0)]
+                [Connection Point: 0x64]
+        [Forward Open Request In: 11]
+        [Data Direction: O->T (1)]
+        [O->T API: 100.000ms]
+        [Time since last data: 113.622800 milliseconds]
+Common Industrial Protocol, I/O
+    CIP Sequence Count: 944
+    32-bit Header: 0x00000001, Run/Idle: Run
+        .... .... .... .... .... .... .... 00.. = ROO: 0x0
+        .... .... .... .... .... .... .... ..0. = COO: 0x0
+        .... .... .... .... .... .... .... ...1 = Run/Idle: Run (0x1)
+    Data: 0000000000000000

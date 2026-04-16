@@ -1,0 +1,196 @@
+Frame 262: Packet, 120 bytes on wire (960 bits), 120 bytes captured (960 bits) on interface \Device\NPF_{F1FE4270-B104-4C83-B2F3-362E7BFB456E}, id 0
+    Section number: 1
+    Interface id: 0 (\Device\NPF_{F1FE4270-B104-4C83-B2F3-362E7BFB456E})
+        Interface name: \Device\NPF_{F1FE4270-B104-4C83-B2F3-362E7BFB456E}
+        Interface description: Ethernet
+    Encapsulation type: Ethernet (1)
+    Arrival Time: Apr 16, 2026 02:14:26.774640800 Eastern Daylight Time
+    UTC Arrival Time: Apr 16, 2026 06:14:26.774640800 UTC
+    Epoch Arrival Time: 1776320066.774640800
+    [Time shift for this packet: 0.000000000 seconds]
+    [Time delta from previous captured frame: 94.872700 milliseconds]
+    [Time delta from previous displayed frame: 94.872700 milliseconds]
+    [Time since reference or first frame: 20.299983700 seconds]
+    Frame Number: 262
+    Frame Length: 120 bytes (960 bits)
+    Capture Length: 120 bytes (960 bits)
+    [Frame is marked: False]
+    [Frame is ignored: False]
+    [Protocols in frame: eth:ethertype:ip:tcp:enip:cip:cipcm]
+    Character encoding: ASCII (0)
+    [Coloring Rule Name: TCP]
+    [Coloring Rule String: tcp]
+Ethernet II, Src: ASUSTekCOMPU_c7:20:90 (08:bf:b8:c7:20:90), Dst: HMSIndustria_7b:54:0a (00:30:11:7b:54:0a)
+    Destination: HMSIndustria_7b:54:0a (00:30:11:7b:54:0a)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: ASUSTekCOMPU_c7:20:90 (08:bf:b8:c7:20:90)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+    [Stream index: 0]
+Internet Protocol Version 4, Src: 192.168.1.2, Dst: 192.168.1.4
+    0100 .... = Version: 4
+    .... 0101 = Header Length: 20 bytes (5)
+    Differentiated Services Field: 0x00 (DSCP: CS0, ECN: Not-ECT)
+        0000 00.. = Differentiated Services Codepoint: Default (0)
+        .... ..00 = Explicit Congestion Notification: Not ECN-Capable Transport (0)
+    Total Length: 106
+    Identification: 0xb36e (45934)
+    010. .... = Flags: 0x2, Don't fragment
+        0... .... = Reserved bit: Not set
+        .1.. .... = Don't fragment: Set
+        ..0. .... = More fragments: Not set
+    ...0 0000 0000 0000 = Fragment Offset: 0
+    Time to Live: 128
+    Protocol: TCP (6)
+    Header Checksum: 0x0000 [validation disabled]
+    [Header checksum status: Unverified]
+    Source Address: 192.168.1.2
+    Destination Address: 192.168.1.4
+    [Stream index: 0]
+Transmission Control Protocol, Src Port: 43073, Dst Port: 44818, Seq: 167, Ack: 213, Len: 66
+    Source Port: 43073
+    Destination Port: 44818
+    [Stream index: 0]
+    [Stream Packet Number: 12]
+    [Conversation completeness: Complete, WITH_DATA (63)]
+        ..1. .... = RST: Present
+        ...1 .... = FIN: Present
+        .... 1... = Data: Present
+        .... .1.. = ACK: Present
+        .... ..1. = SYN-ACK: Present
+        .... ...1 = SYN: Present
+        [Completeness Flags: RFDASS]
+    [TCP Segment Len: 66]
+    Sequence Number: 167    (relative sequence number)
+    Sequence Number (raw): 2658536422
+    [Next Sequence Number: 233    (relative sequence number)]
+    Acknowledgment Number: 213    (relative ack number)
+    Acknowledgment number (raw): 2372912
+    0101 .... = Header Length: 20 bytes (5)
+    Flags: 0x018 (PSH, ACK)
+        000. .... .... = Reserved: Not set
+        ...0 .... .... = Accurate ECN: Not set
+        .... 0... .... = Congestion Window Reduced: Not set
+        .... .0.. .... = ECN-Echo: Not set
+        .... ..0. .... = Urgent: Not set
+        .... ...1 .... = Acknowledgment: Set
+        .... .... 1... = Push: Set
+        .... .... .0.. = Reset: Not set
+        .... .... ..0. = Syn: Not set
+        .... .... ...0 = Fin: Not set
+        [TCP Flags: ·······AP···]
+    Window: 65323
+    [Calculated window size: 65323]
+    [Window size scaling factor: -2 (no window scaling used)]
+    Checksum: 0x83b3 [unverified]
+    [Checksum Status: Unverified]
+    Urgent Pointer: 0
+    [Timestamps]
+        [Time since first frame in this TCP stream: 20.299983700 seconds]
+        [Time since previous frame in this TCP stream: 12.953074700 seconds]
+    [SEQ/ACK analysis]
+        [iRTT: 4.158800 milliseconds]
+        [Bytes in flight: 66]
+        [Bytes sent since last PSH flag: 66]
+    [Client Contiguous Streams: 1]
+    [Server Contiguous Streams: 1]
+    TCP payload (66 bytes)
+    [PDU Size: 66]
+EtherNet/IP (Industrial Protocol), Session: 0x1C02003A, Send RR Data
+    Encapsulation Header
+        Command: Send RR Data (0x006f)
+        Length: 42
+        Session Handle: 0x1c02003a
+        Status: Success (0x00000000)
+        Sender Context: 0000000000000000
+        Options: 0x00000000
+    Command Specific Data
+        Interface Handle: CIP (0x00000000)
+        Timeout: 0
+        Item Count: 2
+            Type ID: Null Address Item (0x0000)
+                Length: 0
+            Type ID: Unconnected Data Item (0x00b2)
+                Length: 26
+        [Response In: 264]
+Common Industrial Protocol
+    Service: Unknown Service (0x4e) (Request)
+        0... .... = Request/Response: Request (0x0)
+        .100 1110 = Service: Unknown (0x4e)
+    Request Path Size: 2 words
+    Request Path: Connection Manager, Instance: 0x01
+        Path Segment: 0x20 (8-Bit Class Segment)
+            001. .... = Path Segment Type: Logical Segment (1)
+            ...0 00.. = Logical Segment Type: Class ID (0)
+            .... ..00 = Logical Segment Format: 8-bit Logical Segment (0)
+            Class: Connection Manager (0x06)
+        Path Segment: 0x24 (8-Bit Instance Segment)
+            001. .... = Path Segment Type: Logical Segment (1)
+            ...0 01.. = Logical Segment Type: Instance ID (1)
+            .... ..00 = Logical Segment Format: 8-bit Logical Segment (0)
+            Instance: 0x01
+CIP Connection Manager
+    Service: Forward Close (Request)
+        0... .... = Request/Response: Request (0x0)
+        .100 1110 = Service: Forward Close (0x4e)
+    Command Specific Data
+        ...0 .... = Priority: 0
+        .... 0001 = Tick time: 1
+        Time-out ticks: 250
+        Actual Time Out: 500ms
+        Connection Serial Number: 0x0d1a
+        Originator Vendor ID: SEW Eurodrive GmbH (0x013b)
+        Originator Serial Number: 0x11223344
+        Connection Path Size: 4 words
+        Reserved: 0x00
+        Connection Path: Assembly, Instance: 0x01, Connection Point: 0x96, Connection Point: 0x64
+            Path Segment: 0x20 (8-Bit Class Segment)
+                001. .... = Path Segment Type: Logical Segment (1)
+                ...0 00.. = Logical Segment Type: Class ID (0)
+                .... ..00 = Logical Segment Format: 8-bit Logical Segment (0)
+                Class: Assembly (0x04)
+            Path Segment: 0x24 (8-Bit Instance Segment)
+                001. .... = Path Segment Type: Logical Segment (1)
+                ...0 01.. = Logical Segment Type: Instance ID (1)
+                .... ..00 = Logical Segment Format: 8-bit Logical Segment (0)
+                Instance: 0x01
+            Path Segment: 0x2c (8-Bit Connection Point Segment)
+                001. .... = Path Segment Type: Logical Segment (1)
+                ...0 11.. = Logical Segment Type: Connection Point (3)
+                .... ..00 = Logical Segment Format: 8-bit Logical Segment (0)
+                Connection Point: 0x96
+            Path Segment: 0x2c (8-Bit Connection Point Segment)
+                001. .... = Path Segment Type: Logical Segment (1)
+                ...0 11.. = Logical Segment Type: Connection Point (3)
+                .... ..00 = Logical Segment Format: 8-bit Logical Segment (0)
+                Connection Point: 0x64
+        [Connection Information]
+            [CIP Connection Index: 0]
+            [Forward Open Connection Path: Assembly, Instance: 0x01, Connection Point: 0x96, Connection Point: 0x64]
+                [Path Segment: 0x20 (8-Bit Class Segment)]
+                    [001. .... = Path Segment Type: Logical Segment (1)]
+                    [...0 00.. = Logical Segment Type: Class ID (0)]
+                    [.... ..00 = Logical Segment Format: 8-bit Logical Segment (0)]
+                    [Class: Assembly (0x04)]
+                [Path Segment: 0x24 (8-Bit Instance Segment)]
+                    [001. .... = Path Segment Type: Logical Segment (1)]
+                    [...0 01.. = Logical Segment Type: Instance ID (1)]
+                    [.... ..00 = Logical Segment Format: 8-bit Logical Segment (0)]
+                    [Instance: 0x01]
+                [Path Segment: 0x2c (8-Bit Connection Point Segment)]
+                    [001. .... = Path Segment Type: Logical Segment (1)]
+                    [...0 11.. = Logical Segment Type: Connection Point (3)]
+                    [.... ..00 = Logical Segment Format: 8-bit Logical Segment (0)]
+                    [Connection Point: 0x96]
+                [Path Segment: 0x2c (8-Bit Connection Point Segment)]
+                    [001. .... = Path Segment Type: Logical Segment (1)]
+                    [...0 11.. = Logical Segment Type: Connection Point (3)]
+                    [.... ..00 = Logical Segment Format: 8-bit Logical Segment (0)]
+                    [Connection Point: 0x64]
+            [Forward Open Request In: 11]
+            [O->T API: 100.000ms]
+            [T->O API: 100.000ms]
+            [O->T Timeout Threshold: 400ms]
+            [T->O Timeout Threshold: 400ms]
