@@ -1,0 +1,220 @@
+macro_command main()
+
+// ========= Session variables =========
+short i
+int session   // For session handle
+char sendBuf[80]
+char recvBuf[80]
+short recvLen
+
+// ====== 1. REGISTER SESSION (TCP/44818) ======
+// 0x65 0x00 0x04 0x00, 0x00... context/options/protocol
+FILL(sendBuf[0], 0, 24)
+sendBuf[0] = 0x65
+sendBuf[1] = 0x00
+sendBuf[2] = 0x04
+sendBuf[3] = 0x00
+sendBuf[20] = 0x01
+sendBuf[21] = 0x00
+
+OUTPORT(sendBuf[0], "Free Protocol", 24)
+INPORT(recvBuf[0], "Free Protocol", 24, recvLen)
+
+// Get session handle from reply (bytes 4-7, little endian)
+session = recvBuf[4] + (recvBuf[5]<<8) + (recvBuf[6]<<16) + (recvBuf[7]<<24)
+
+// ====== 2. FORWARD OPEN REQUEST (TCP/44818) ======
+FILL(sendBuf[0], 0, 80)
+i = 0
+// EtherNet/IP Encapsulation header
+sendBuf[i] = 0x6F      // Command=SendRRData
+i = i + 1
+sendBuf[i] = 0x00
+i = i + 1
+sendBuf[i] = 0x3E      // Length=62
+i = i + 1
+sendBuf[i] = 0x00
+i = i + 1
+// Session handle (4 bytes, LE)
+sendBuf[i] = session & 0xFF
+i = i + 1
+sendBuf[i] = (session >> 8) & 0xFF
+i = i + 1
+sendBuf[i] = (session >> 16) & 0xFF
+i = i + 1
+sendBuf[i] = (session >> 24) & 0xFF
+i = i + 1
+// Status (4 bytes), Sender Context (8 bytes), Options (4 bytes)
+FILL(sendBuf[i], 0, 16)
+i = i + 16
+// Interface handle (CIP=0)
+sendBuf[i] = 0x00
+i = i + 1
+sendBuf[i] = 0x00
+i = i + 1
+sendBuf[i] = 0x00
+i = i + 1
+sendBuf[i] = 0x00
+i = i + 1
+// Timeout
+sendBuf[i] = 0x00
+
+i = i + 1
+sendBuf[i] = 0x00
+i = i + 1
+// Item count = 2
+sendBuf[i] = 0x02
+i = i + 1
+sendBuf[i] = 0x00
+i = i + 1
+// Null Address Item
+sendBuf[i] = 0x00
+i = i + 1
+sendBuf[i] = 0x00
+i = i + 1
+sendBuf[i] = 0x00
+i = i + 1
+sendBuf[i] = 0x00
+i = i + 1
+// Unconnected Data Item type
+sendBuf[i] = 0xB2
+i = i + 1
+sendBuf[i] = 0x00
+i = i + 1
+// Length of Forward Open data = 46 (0x2E 0x00)
+sendBuf[i] = 0x2E
+i = i + 1
+sendBuf[i] = 0x00
+i = i + 1
+
+// CIP data - Forward Open Request (example based on your EDS and Hilscher values)
+sendBuf[i] = 0x54      // Service: Forward Open
+i = i + 1
+sendBuf[i] = 0x02      // Path size
+i = i + 1
+sendBuf[i] = 0x20
+i = i + 1
+sendBuf[i] = 0x06
+i = i + 1
+sendBuf[i] = 0x24
+i = i + 1
+sendBuf[i] = 0x01
+i = i + 1
+// Priority/time, timeout ticks
+sendBuf[i] = 0x03
+i = i + 1
+sendBuf[i] = 0x00
+i = i + 1
+sendBuf[i] = 0xFA    // Timeout ticks, usually 250 (0xFA 0x00)
+i = i + 1
+sendBuf[i] = 0x00
+i = i + 1
+sendBuf[i] = 0x34    // Conn Serial Number (any, must match close)
+i = i + 1
+sendBuf[i] = 0x12
+i = i + 1
+sendBuf[i] = 0x5A    // Vendor ID (0x005A)
+i = i + 1
+sendBuf[i] = 0x00
+i = i + 1
+// Originator Serial (little endian = 2691411883 = 0xA079EB0B)
+sendBuf[i] = 0x0B
+
+i = i + 1
+sendBuf[i] = 0xEB
+i = i + 1
+sendBuf[i] = 0x79
+i = i + 1
+sendBuf[i] = 0xA0
+i = i + 1
+// Connection time, dummy 0s
+FILL(sendBuf[i], 0, 4)
+i = i + 4
+// O->T RPI (100ms = 0x000186A0)
+sendBuf[i] = 0xA0
+i = i + 1
+sendBuf[i] = 0x86
+i = i + 1
+sendBuf[i] = 0x01
+i = i + 1
+sendBuf[i] = 0x00
+i = i + 1
+// O->T params: P2P 4 words (0x4204) = 0b0100 0010 0000 0100
+sendBuf[i] = 0x04
+i = i + 1
+sendBuf[i] = 0x42
+i = i + 1
+// T->O RPI (100ms)
+sendBuf[i] = 0xA0
+i = i + 1
+sendBuf[i] = 0x86
+i = i + 1
+sendBuf[i] = 0x01
+i = i + 1
+sendBuf[i] = 0x00
+i = i + 1
+// T->O params: P2P 4 words (0x4204)
+sendBuf[i] = 0x04
+i = i + 1
+sendBuf[i] = 0x42
+i = i + 1
+// Transport Type/Trigger
+sendBuf[i] = 0xA3
+i = i + 1
+// Connection Path
+sendBuf[i] = 0x20
+i = i + 1
+sendBuf[i] = 0x04
+i = i + 1
+sendBuf[i] = 0x24
+i = i + 1
+sendBuf[i] = 0x05
+i = i + 1
+sendBuf[i] = 0x2C
+i = i + 1
+sendBuf[i] = 0x96    // OUT (150)
+i = i + 1
+sendBuf[i] = 0x2C
+i = i + 1
+sendBuf[i] = 0x64    // IN (100)
+i = i + 1
+
+// Send Forward Open
+
+OUTPORT(sendBuf[0], "Free Protocol", i)
+INPORT(recvBuf[0], "Free Protocol", 60, recvLen)
+// Process/parse reply here if desired!
+
+// ====== 3. GetData/SetData for Regular Cyclic I/O ======
+
+// (This assumes you have configured a device called "ETHERNET_L_VFD" for explicit messaging, or use macros to access those objects)
+// Input (T->O), Instance 100, 4 words:
+short VFDin_1
+short VFDin_2
+short VFDin_3
+short VFDin_4
+
+GetData(VFDin_1, "ETHERNET_L_VFD", "READ_INPUTS{4,100,3}[0]", 1)
+GetData(VFDin_2, "ETHERNET_L_VFD", "READ_INPUTS{4,100,3}[1]", 1)
+GetData(VFDin_3, "ETHERNET_L_VFD", "READ_INPUTS{4,100,3}[2]", 1)
+GetData(VFDin_4, "ETHERNET_L_VFD", "READ_INPUTS{4,100,3}[3]", 1)
+
+// Output (O->T), Instance 150, 4 words:
+short VFDout[4]
+FILL(VFDout[0], 0, 4) // example, clear all
+VFDout[0] = 0x1111
+VFDout[1] = 0x2222
+VFDout[2] = 0x3333
+VFDout[3] = 0x4444
+//SetData(VFDout[0], "ETHERNET_L_VFD", 4, 150, 4)
+
+//Output a full 32-bit integer as demo
+short ONE
+short TWO
+short THREE
+short FOUR
+SetData(ONE, "ETHERNET_L_VFD", "SEND_OUTPUTS{4,150,3}[0]", 1)
+SetData(TWO, "ETHERNET_L_VFD", "SEND_OUTPUTS{4,150,3}[1]", 1)
+SetData(THREE, "ETHERNET_L_VFD", "SEND_OUTPUTS{4,150,3}[2]", 1)
+SetData(FOUR, "ETHERNET_L_VFD", "SEND_OUTPUTS{4,150,3}[3]", 1)
+end macro_command
