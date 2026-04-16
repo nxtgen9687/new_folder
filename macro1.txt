@@ -1,0 +1,59 @@
+
+macro_command main()
+
+unsigned int READ_1, READ_2, READ_3, READ_4, SP_WORD
+float SPEED_FL, SPEED_BUFF, AMP_FL, AMP_BUFF
+int CONTROL_STOP_2, HZ_SETPOINT_2, RAMP_3
+
+
+GetData(READ_1, "ETHERNET_L_VFD", "READ_INPUTS{4,100,3}[0]", 1)
+GetData(READ_2, "ETHERNET_L_VFD", "READ_INPUTS{4,100,3}[1]", 1)
+GetData(READ_3, "ETHERNET_L_VFD", "READ_INPUTS{4,100,3}[2]", 1)
+GetData(READ_4, "ETHERNET_L_VFD", "READ_INPUTS{4,100,3}[3]", 1)
+
+///////////////////////////////////////////////////////////////////////////
+SetData(READ_1, "Local HMI", LW, 110, 1)
+SetData(READ_2, "Local HMI", LW, 120, 1)
+SetData(READ_3, "Local HMI", LW, 130, 1)
+SetData(READ_4, "Local HMI", LW, 140, 1)
+///////////////////////////////////////////////////////////////////////////
+
+
+unsigned int ID, CODE, STATUS, STATE
+
+GetData(ID, "ETHERNET_L_VFD", "VENDOR ID{1,1,1}", 1)
+GetData(CODE, "ETHERNET_L_VFD", "PRODUCT_CODE{1,1,3}", 1)
+GetData(STATUS, "ETHERNET_L_VFD", "STATUS{1,1,5}", 1)
+GetData(STATE, "ETHERNET_L_VFD", "STATE{1,1,8}", 1)
+
+SetData(ID, "Local HMI", "ID_1", 1)
+SetData(CODE, "Local HMI", "CODE_2", 1)
+SetData(STATE, "Local HMI", "STATE_3", 1)
+SetData(STATUS, "Local HMI", "STATUS_4", 1)
+
+
+
+
+
+GetData(CONTROL_STOP_2, "Local HMI", "C_1", 1)
+GetData(HZ_SETPOINT_2, "Local HMI", "H_2", 1)
+GetData(RAMP_3, "Local HMI", "R_3", 1)
+
+
+SetData(CONTROL_STOP_2, "ETHERNET_L_VFD", "SEND_OUTPUTS{4,150,3}[0]", 1)
+SetData(HZ_SETPOINT_2, "ETHERNET_L_VFD", "SEND_OUTPUTS{4,150,3}[1]", 1)
+SetData(RAMP_3, "ETHERNET_L_VFD", "SEND_OUTPUTS{4,150,3}[2]", 1)
+///////////////////////////////////////////////////////////////////////////
+
+	
+	// SPEED VALUE HZ
+LOWORD(READ_2, SP_WORD)
+SPEED_BUFF = SP_WORD
+SPEED_FL = (SPEED_BUFF / 16384.0) * 60
+SetData(SPEED_FL, "Local HMI", "READ_VFD_INPUT[2]_SPEED", 1)
+	
+	// AMPERAGE VALUE
+AMP_FL = READ_3
+AMP_BUFF = (AMP_FL/1000) * 18
+SetData(AMP_BUFF, "Local HMI", "READ_VFD_INPUT[3]_AMPS", 1) 
+
