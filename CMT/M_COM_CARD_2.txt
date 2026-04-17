@@ -1,41 +1,69 @@
 macro_command main()
 
 //===========================================================================
-// M_COM_CARD_2.txt
-// CMT3072XP - COMPACTCOM ADAPTER 2 CYCLIC I/O MACRO
-// PURPOSE  : Cyclic read inputs / write outputs for Adapter 2
+// M_COM_CARD_2.txt  -  UPDATED FROM EDS FILE: anybus_compactcom_2p.txt
+// CMT3072XP - CYCLIC I/O MACRO - COMPACTCOM ADAPTER 2
+// PURPOSE  : Read 4 input words FROM Adapter 2, Write 4 output words TO Adapter 2
 // RUN TYPE : Cyclic - every 200ms
 // DEVICE   : "COM_CARD_2"  IP: 192.168.1.5
-// REQUIRES : M_ETH_DRIVER must have run first (LB0 = 1 = sessions ready)
-// T->O     : Instance 0x64 (100), 5 words READ  -> LW 200-204
-// O->T     : Instance 0x96 (150), 7 words WRITE <- LW 400-406
-// IDENTITY : Class 1, Instance 1           -> LW 210-213
-// STATUS   : Connection Online/Offline      -> LW 641
+// REQUIRES : LB0=1 (set by M_ETH_DRIVER when both sessions are ready)
+//
+// EDS CONFIRMED (anybus_compactcom_2p.txt):
+//   T->O : Assem100 (0x64), Class=4, Inst=100, Attr=3 -> 4 words IN  (8 bytes)
+//   O->T : Assem150 (0x96), Class=4, Inst=150, Attr=3 -> 4 words OUT (8 bytes)
+//
+// REGISTER MAP:
+//   LW 200 = Input  Word [0]  (Q_2) - Status Word
+//   LW 201 = Input  Word [1]  (W_2) - Speed Feedback
+//   LW 202 = Input  Word [2]  (E_2) - Current / Amps
+//   LW 203 = Input  Word [3]  (R_2) - State
+//   LW 210 = Identity: Vendor ID
+//   LW 211 = Identity: Product Code
+//   LW 212 = Identity: Status
+//   LW 213 = Identity: State
+//   LW 400 = Output Word [0]  (Control Word  - set from HMI)
+//   LW 401 = Output Word [1]  (Speed Setpoint- set from HMI)
+//   LW 402 = Output Word [2]  (Ramp Time     - set from HMI)
+//   LW 403 = Output Word [3]  (Auxiliary     - set from HMI)
+//   LW 641 = Connection Status (1=Online, 0=Offline)
 //===========================================================================
 
-    unsigned int Q_2
-    unsigned int W_2
-    unsigned int E_2
-    unsigned int R_2
-    unsigned int T_2
-    unsigned int OUT2_0
-    unsigned int OUT2_1
-    unsigned int OUT2_2
-    unsigned int OUT2_3
-    unsigned int OUT2_4
-    unsigned int OUT2_5
-    unsigned int OUT2_6
+    // INPUT variables - 4 words FROM Adapter 2
+    unsigned int Q_2        // Word [0] - Status Word
+    unsigned int W_2        // Word [1] - Speed Feedback
+    unsigned int E_2        // Word [2] - Current / Amps
+    unsigned int R_2        // Word [3] - State
+
+    // OUTPUT variables - 4 words TO Adapter 2
+    unsigned int OUT2_0     // Word [0] - Control Word
+    unsigned int OUT2_1     // Word [1] - Speed Setpoint
+    unsigned int OUT2_2     // Word [2] - Ramp Time
+    unsigned int OUT2_3     // Word [3] - Auxiliary
+
+    // Identity Object cache
     unsigned int ID_V2
     unsigned int ID_P2
     unsigned int ID_ST2
     unsigned int ID_STA2
+
     short CONN_2
     short READY
 
+//----------------------------------------------------------------------
+// GUARD: Only run if M_ETH_DRIVER has set LB0=1 (sessions established)
+//----------------------------------------------------------------------
+
     GetData(READY, "Local HMI", LB, 0, 1)
     if READY == 0 then
-        SetData(0, "Local HMI", LW, 641, 1)
+        SetData(0, "Local HMI", LW, 641, 1)    // Offline - session not ready
     else
+
+//----------------------------------------------------------------------
+// READ IDENTITY OBJECT
+// CIP Get Attribute Single: Class=1, Instance=1
+// Same CompactCom 30 EIP device - VendCode=90, ProdCode=46
+//----------------------------------------------------------------------
+
         GetData(ID_V2,   "COM_CARD_2", "VENDOR ID{1,1,1}",    1)
         GetData(ID_P2,   "COM_CARD_2", "PRODUCT_CODE{1,1,3}", 1)
         GetData(ID_ST2,  "COM_CARD_2", "STATUS{1,1,5}",       1)
@@ -44,32 +72,45 @@ macro_command main()
         SetData(ID_P2,   "Local HMI", LW, 211, 1)
         SetData(ID_ST2,  "Local HMI", LW, 212, 1)
         SetData(ID_STA2, "Local HMI", LW, 213, 1)
+
+//----------------------------------------------------------------------
+// READ CYCLIC INPUTS - 4 WORDS (EDS CORRECTED)
+// T->O: Assembly Class=4, Instance=100(Assem100), Attribute=3
+// 4 words = 8 bytes
+//----------------------------------------------------------------------
+
         GetData(Q_2, "COM_CARD_2", "READ{4,100,3}[0]", 1)
         GetData(W_2, "COM_CARD_2", "READ{4,100,3}[1]", 1)
         GetData(E_2, "COM_CARD_2", "READ{4,100,3}[2]", 1)
         GetData(R_2, "COM_CARD_2", "READ{4,100,3}[3]", 1)
-        GetData(T_2, "COM_CARD_2", "READ{4,100,3}[4]", 1)
         SetData(Q_2, "Local HMI", LW, 200, 1)
         SetData(W_2, "Local HMI", LW, 201, 1)
         SetData(E_2, "Local HMI", LW, 202, 1)
         SetData(R_2, "Local HMI", LW, 203, 1)
-        SetData(T_2, "Local HMI", LW, 204, 1)
+
+//----------------------------------------------------------------------
+// WRITE CYCLIC OUTPUTS - 4 WORDS (EDS CORRECTED)
+// O->T: Assembly Class=4, Instance=150(Assem150), Attribute=3
+// 4 words = 8 bytes
+// Values read from HMI operator registers LW 400-403
+//----------------------------------------------------------------------
+
         GetData(OUT2_0, "Local HMI", LW, 400, 1)
         GetData(OUT2_1, "Local HMI", LW, 401, 1)
         GetData(OUT2_2, "Local HMI", LW, 402, 1)
         GetData(OUT2_3, "Local HMI", LW, 403, 1)
-        GetData(OUT2_4, "Local HMI", LW, 404, 1)
-        GetData(OUT2_5, "Local HMI", LW, 405, 1)
-        GetData(OUT2_6, "Local HMI", LW, 406, 1)
         SetData(OUT2_0, "COM_CARD_2", "SEND{4,150,3}[0]", 1)
         SetData(OUT2_1, "COM_CARD_2", "SEND{4,150,3}[1]", 1)
         SetData(OUT2_2, "COM_CARD_2", "SEND{4,150,3}[2]", 1)
         SetData(OUT2_3, "COM_CARD_2", "SEND{4,150,3}[3]", 1)
-        SetData(OUT2_4, "COM_CARD_2", "SEND{4,150,3}[4]", 1)
-        SetData(OUT2_5, "COM_CARD_2", "SEND{4,150,3}[5]", 1)
-        SetData(OUT2_6, "COM_CARD_2", "SEND{4,150,3}[6]", 1)
+
+//----------------------------------------------------------------------
+// CONNECTION STATUS
+//----------------------------------------------------------------------
+
         CONN_2 = GetDevice("COM_CARD_2")
-        SetData(CONN_2, "Local HMI", LW, 641, 1)
+        SetData(CONN_2, "Local HMI", LW, 641, 1)   // 1=Online 0=Offline
+
     end if
 
 end macro_command
