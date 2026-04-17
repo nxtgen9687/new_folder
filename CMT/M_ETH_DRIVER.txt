@@ -1,42 +1,23 @@
+sub ePurge()
+    char  g[255]
+    short len
+    len = 0
+    INPORT(g[0], "Free Protocol", 255, len)
+end sub
+
 macro_command main()
 
-//===========================================================================
-// M_ETH_DRIVER.txt  -  UPDATED FROM EDS FILE: anybus_compactcom_2p.txt
-// CMT3072XP - EtherNet/IP SESSION DRIVER
-// PURPOSE  : Establish TCP sessions + Forward Open for BOTH CompactCom adapters
-// RUN TYPE : Execute ONCE on Screen Open
-// HMI IP   : 192.168.1.99
-// CARD 1   : 192.168.1.4  (device: "COM_CARD_1")
-// CARD 2   : 192.168.1.5  (device: "COM_CARD_2")
-// EIP Port : 44818
-//
-// EDS CONFIRMED VALUES (anybus_compactcom_2p.txt):
-//   VendCode     = 90  (0x005A)
-//   ProdCode     = 46  (0x002E)
-//   Assem100     = Input  Data (T->O), YOUR CONFIG = 4 words (8 bytes)
-//   Assem150     = Output Data (O->T), YOUR CONFIG = 4 words (8 bytes)
-//   O->T Params  = 0x4008  (Point-to-Point, Fixed, 8 bytes)
-//   T->O Params  = 0x2008  (Multicast,      Fixed, 8 bytes)
-//   RPI          = 100ms (valid range: 2ms-3200ms per EDS Param3)
-//   Conn Path    = 20 04 24 05 2C 96 2C 64 (EDS Connection1 Exclusive Owner)
-//   Transport    = 0x01 (Cyclic, Class 1, Client)
-//===========================================================================
+    char  sendBuf[128]
+    char  recvBuf[128]
+    short recvLen
+    short i
+    int   session_1
+    int   session_2
+    short fo_ok_1
+    short fo_ok_2
 
-    char   sendBuf[128]
-    char   recvBuf[128]
-    short  recvLen
-    short  i
-    int    session_1
-    int    session_2
-    short  fo_ok_1
-    short  fo_ok_2
-
-//----------------------------------------------------------------------
-// STEP 1A: REGISTER SESSION - ADAPTER 1 (192.168.1.4)
-//----------------------------------------------------------------------
-
-    PURGE("Free Protocol")
-    FILL(sendBuf, 0, 24)
+    ePurge()
+    FILL(sendBuf[0], 0, 24)
     sendBuf[0]  = 0x65
     sendBuf[1]  = 0x00
     sendBuf[2]  = 0x04
@@ -45,23 +26,15 @@ macro_command main()
     sendBuf[21] = 0x00
     sendBuf[22] = 0x00
     sendBuf[23] = 0x00
-    OUTPORT(sendBuf, "Free Protocol", 24)
-    INPORT2(recvBuf, "Free Protocol", recvLen, 500)
+    OUTPORT(sendBuf[0], "Free Protocol", 24)
+    INPORT2(recvBuf[0], "Free Protocol", 128, recvLen, 500)
     session_1 = recvBuf[4]
     session_1 = session_1 + (recvBuf[5] * 256)
     session_1 = session_1 + (recvBuf[6] * 65536)
     session_1 = session_1 + (recvBuf[7] * 16777216)
     SetData(session_1, "Local HMI", LW, 600, 1)
 
-//----------------------------------------------------------------------
-// STEP 1B: FORWARD OPEN - ADAPTER 1
-// EDS Connection1 Exclusive Owner
-// O->T: Assem150(0x96), P2P,       4 words=8 bytes, Params=0x4008
-// T->O: Assem100(0x64), Multicast, 4 words=8 bytes, Params=0x2008
-// Path: 20 04 24 05 2C 96 2C 64
-//----------------------------------------------------------------------
-
-    FILL(sendBuf, 0, 128)
+    FILL(sendBuf[0], 0, 128)
     i = 0
     sendBuf[i] = 0x6F  i = i + 1
     sendBuf[i] = 0x00  i = i + 1
@@ -104,30 +77,27 @@ macro_command main()
     sendBuf[i] = 0xA0  i = i + 1
     sendBuf[i] = 0x86  i = i + 1
     sendBuf[i] = 0x01  i = i + 1
-    sendBuf[i] = 0x00  i = i + 1;
-    // O->T Params: 0x4008 = P2P, Fixed, 8 bytes (4 words) - EDS CORRECTED
-    sendBuf[i] = 0x08  i = i + 1;
-    sendBuf[i] = 0x40  i = i + 1;
-    sendBuf[i] = 0xA0  i = i + 1;
-    sendBuf[i] = 0x86  i = i + 1;
-    sendBuf[i] = 0x01  i = i + 1;
-    sendBuf[i] = 0x00  i = i + 1;
-    // T->O Params: 0x2008 = Multicast, Fixed, 8 bytes (4 words) - EDS CORRECTED
-    sendBuf[i] = 0x08  i = i + 1;
-    sendBuf[i] = 0x20  i = i + 1;
-    sendBuf[i] = 0x01  i = i + 1;
-    sendBuf[i] = 0x04  i = i + 1;
-    // Connection Path: 20 04 24 05 2C 96 2C 64 (EDS Connection1)
-    sendBuf[i] = 0x20  i = i + 1;
-    sendBuf[i] = 0x04  i = i + 1;
-    sendBuf[i] = 0x24  i = i + 1;
-    sendBuf[i] = 0x05  i = i + 1;
-    sendBuf[i] = 0x2C  i = i + 1;
-    sendBuf[i] = 0x96  i = i + 1;
-    sendBuf[i] = 0x2C  i = i + 1;
+    sendBuf[i] = 0x00  i = i + 1
+    sendBuf[i] = 0x08  i = i + 1
+    sendBuf[i] = 0x40  i = i + 1
+    sendBuf[i] = 0xA0  i = i + 1
+    sendBuf[i] = 0x86  i = i + 1
+    sendBuf[i] = 0x01  i = i + 1
+    sendBuf[i] = 0x00  i = i + 1
+    sendBuf[i] = 0x08  i = i + 1
+    sendBuf[i] = 0x20  i = i + 1
+    sendBuf[i] = 0x01  i = i + 1
+    sendBuf[i] = 0x04  i = i + 1
+    sendBuf[i] = 0x20  i = i + 1
+    sendBuf[i] = 0x04  i = i + 1
+    sendBuf[i] = 0x24  i = i + 1
+    sendBuf[i] = 0x05  i = i + 1
+    sendBuf[i] = 0x2C  i = i + 1
+    sendBuf[i] = 0x96  i = i + 1
+    sendBuf[i] = 0x2C  i = i + 1
     sendBuf[i] = 0x64  i = i + 1;
-    OUTPORT(sendBuf, "Free Protocol", i);
-    INPORT2(recvBuf, "Free Protocol", recvLen, 500);
+    OUTPORT(sendBuf[0], "Free Protocol", i);
+    INPORT2(recvBuf[0], "Free Protocol", 128, recvLen, 500);
     if recvBuf[42] == 0x00 then
         fo_ok_1 = 1;
     else
@@ -135,12 +105,8 @@ macro_command main()
     end if;
     SetData(fo_ok_1, "Local HMI", LW, 610, 1);
 
-//----------------------------------------------------------------------
-// STEP 2A: REGISTER SESSION - ADAPTER 2 (192.168.1.5)
-//----------------------------------------------------------------------
-
-    PURGE("Free Protocol")
-    FILL(sendBuf, 0, 24);
+    ePurge();
+    FILL(sendBuf[0], 0, 24);
     sendBuf[0]  = 0x65;
     sendBuf[1]  = 0x00;
     sendBuf[2]  = 0x04;
@@ -149,20 +115,15 @@ macro_command main()
     sendBuf[21] = 0x00;
     sendBuf[22] = 0x00;
     sendBuf[23] = 0x00;
-    OUTPORT(sendBuf, "Free Protocol", 24);
-    INPORT2(recvBuf, "Free Protocol", recvLen, 500);
+    OUTPORT(sendBuf[0], "Free Protocol", 24);
+    INPORT2(recvBuf[0], "Free Protocol", 128, recvLen, 500);
     session_2 = recvBuf[4];
     session_2 = session_2 + (recvBuf[5] * 256);
     session_2 = session_2 + (recvBuf[6] * 65536);
     session_2 = session_2 + (recvBuf[7] * 16777216);
     SetData(session_2, "Local HMI", LW, 620, 1);
 
-//----------------------------------------------------------------------
-// STEP 2B: FORWARD OPEN - ADAPTER 2
-// UNIQUE Connection Serial = 0x0D1B (different from Adapter 1 = 0x0D1A)
-//----------------------------------------------------------------------
-
-    FILL(sendBuf, 0, 128);
+    FILL(sendBuf[0], 0, 128);
     i = 0;
     sendBuf[i] = 0x6F  i = i + 1;
     sendBuf[i] = 0x00  i = i + 1;
@@ -193,7 +154,6 @@ macro_command main()
     sendBuf[i] = 0xFA  i = i + 1;
     FILL(sendBuf[i], 0, 4)   i = i + 4;
     FILL(sendBuf[i], 0, 4)   i = i + 4;
-    // UNIQUE Serial for Adapter 2
     sendBuf[i] = 0x1B  i = i + 1;
     sendBuf[i] = 0x0D  i = i + 1;
     sendBuf[i] = 0x5A  i = i + 1;
@@ -207,14 +167,12 @@ macro_command main()
     sendBuf[i] = 0x86  i = i + 1;
     sendBuf[i] = 0x01  i = i + 1;
     sendBuf[i] = 0x00  i = i + 1;
-    // O->T Params: 0x4008 - EDS CORRECTED
     sendBuf[i] = 0x08  i = i + 1;
     sendBuf[i] = 0x40  i = i + 1;
     sendBuf[i] = 0xA0  i = i + 1;
     sendBuf[i] = 0x86  i = i + 1;
     sendBuf[i] = 0x01  i = i + 1;
     sendBuf[i] = 0x00  i = i + 1;
-    // T->O Params: 0x2008 - EDS CORRECTED
     sendBuf[i] = 0x08  i = i + 1;
     sendBuf[i] = 0x20  i = i + 1;
     sendBuf[i] = 0x01  i = i + 1;
@@ -227,8 +185,8 @@ macro_command main()
     sendBuf[i] = 0x96  i = i + 1;
     sendBuf[i] = 0x2C  i = i + 1;
     sendBuf[i] = 0x64  i = i + 1;
-    OUTPORT(sendBuf, "Free Protocol", i);
-    INPORT2(recvBuf, "Free Protocol", recvLen, 500);
+    OUTPORT(sendBuf[0], "Free Protocol", i);
+    INPORT2(recvBuf[0], "Free Protocol", 128, recvLen, 500);
     if recvBuf[42] == 0x00 then
         fo_ok_2 = 1;
     else
@@ -236,16 +194,10 @@ macro_command main()
     end if;
     SetData(fo_ok_2, "Local HMI", LW, 630, 1);
 
-//----------------------------------------------------------------------
-// STEP 3: SET READY FLAG
-// LB0=1 -> Both sessions OK, cyclic macros can start
-// LB0=0 -> Session failed, check LW610 / LW630
-//----------------------------------------------------------------------
-
     if fo_ok_1 == 1 and fo_ok_2 == 1 then
         SetData(1, "Local HMI", LB, 0, 1);
     else
         SetData(0, "Local HMI", LB, 0, 1);
-    end if
+    end if;
 
 end macro_command
