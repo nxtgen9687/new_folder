@@ -1,16 +1,25 @@
 macro_command main()
 
 //===========================================================================
-// M_ETH_DRIVER.txt
+// M_ETH_DRIVER.txt  -  UPDATED FROM EDS FILE: anybus_compactcom_2p.txt
 // CMT3072XP - EtherNet/IP SESSION DRIVER
 // PURPOSE  : Establish TCP sessions + Forward Open for BOTH CompactCom adapters
-// RUN TYPE : Execute ONCE on Screen Open or on connection bit trigger
+// RUN TYPE : Execute ONCE on Screen Open
 // HMI IP   : 192.168.1.99
 // CARD 1   : 192.168.1.4  (device: "COM_CARD_1")
 // CARD 2   : 192.168.1.5  (device: "COM_CARD_2")
-// Based on : FIRST RUN.pcapng - Session 0x1C02003A confirmed successful
-// O->T     : Instance 0x96(150), 14 bytes, P2P,       RPI=100ms
-// T->O     : Instance 0x64(100), 10 bytes, Multicast, RPI=100ms
+// EIP Port : 44818
+//
+// EDS CONFIRMED VALUES (anybus_compactcom_2p.txt):
+//   VendCode     = 90  (0x005A)
+//   ProdCode     = 46  (0x002E)
+//   Assem100     = Input  Data (T->O), YOUR CONFIG = 4 words (8 bytes)
+//   Assem150     = Output Data (O->T), YOUR CONFIG = 4 words (8 bytes)
+//   O->T Params  = 0x4008  (Point-to-Point, Fixed, 8 bytes)
+//   T->O Params  = 0x2008  (Multicast,      Fixed, 8 bytes)
+//   RPI          = 100ms (valid range: 2ms-3200ms per EDS Param3)
+//   Conn Path    = 20 04 24 05 2C 96 2C 64 (EDS Connection1 Exclusive Owner)
+//   Transport    = 0x01 (Cyclic, Class 1, Client)
 //===========================================================================
 
     char   sendBuf[128]
@@ -24,7 +33,6 @@ macro_command main()
 
 //----------------------------------------------------------------------
 // STEP 1A: REGISTER SESSION - ADAPTER 1 (192.168.1.4)
-// Ref: Frame 6 FIRST RUN.pcapng - Command 0x65, Length 4, Protocol v1
 //----------------------------------------------------------------------
 
     PURGE("Free Protocol")
@@ -47,8 +55,10 @@ macro_command main()
 
 //----------------------------------------------------------------------
 // STEP 1B: FORWARD OPEN - ADAPTER 1
-// Ref: Frame 11(Request)/Frame 12(Response) FIRST RUN.pcapng
-//   Service 0x54, ConnSerial 0x0D1A, VendorID 0x005A, OrgSerial 0x11223344
+// EDS Connection1 Exclusive Owner
+// O->T: Assem150(0x96), P2P,       4 words=8 bytes, Params=0x4008
+// T->O: Assem100(0x64), Multicast, 4 words=8 bytes, Params=0x2008
+// Path: 20 04 24 05 2C 96 2C 64
 //----------------------------------------------------------------------
 
     FILL(sendBuf, 0, 128)
@@ -80,7 +90,8 @@ macro_command main()
     sendBuf[i] = 0x01  i = i + 1
     sendBuf[i] = 0x03  i = i + 1
     sendBuf[i] = 0xFA  i = i + 1
-    FILL(sendBuf[i], 0, 8)   i = i + 8
+    FILL(sendBuf[i], 0, 4)   i = i + 4
+    FILL(sendBuf[i], 0, 4)   i = i + 4
     sendBuf[i] = 0x1A  i = i + 1
     sendBuf[i] = 0x0D  i = i + 1
     sendBuf[i] = 0x5A  i = i + 1
@@ -93,140 +104,148 @@ macro_command main()
     sendBuf[i] = 0xA0  i = i + 1
     sendBuf[i] = 0x86  i = i + 1
     sendBuf[i] = 0x01  i = i + 1
-    sendBuf[i] = 0x00  i = i + 1
-    sendBuf[i] = 0x0E  i = i + 1
-    sendBuf[i] = 0x40  i = i + 1
-    sendBuf[i] = 0xA0  i = i + 1
-    sendBuf[i] = 0x86  i = i + 1
-    sendBuf[i] = 0x01  i = i + 1
-    sendBuf[i] = 0x00  i = i + 1
-    sendBuf[i] = 0x0A  i = i + 1
-    sendBuf[i] = 0x20  i = i + 1
-    sendBuf[i] = 0x01  i = i + 1
-    sendBuf[i] = 0x04  i = i + 1
-    sendBuf[i] = 0x20  i = i + 1
-    sendBuf[i] = 0x04  i = i + 1
-    sendBuf[i] = 0x24  i = i + 1
-    sendBuf[i] = 0x01  i = i + 1
-    sendBuf[i] = 0x2C  i = i + 1
-    sendBuf[i] = 0x96  i = i + 1
-    sendBuf[i] = 0x2C  i = i + 1
+    sendBuf[i] = 0x00  i = i + 1;
+    // O->T Params: 0x4008 = P2P, Fixed, 8 bytes (4 words) - EDS CORRECTED
+    sendBuf[i] = 0x08  i = i + 1;
+    sendBuf[i] = 0x40  i = i + 1;
+    sendBuf[i] = 0xA0  i = i + 1;
+    sendBuf[i] = 0x86  i = i + 1;
+    sendBuf[i] = 0x01  i = i + 1;
+    sendBuf[i] = 0x00  i = i + 1;
+    // T->O Params: 0x2008 = Multicast, Fixed, 8 bytes (4 words) - EDS CORRECTED
+    sendBuf[i] = 0x08  i = i + 1;
+    sendBuf[i] = 0x20  i = i + 1;
+    sendBuf[i] = 0x01  i = i + 1;
+    sendBuf[i] = 0x04  i = i + 1;
+    // Connection Path: 20 04 24 05 2C 96 2C 64 (EDS Connection1)
+    sendBuf[i] = 0x20  i = i + 1;
+    sendBuf[i] = 0x04  i = i + 1;
+    sendBuf[i] = 0x24  i = i + 1;
+    sendBuf[i] = 0x05  i = i + 1;
+    sendBuf[i] = 0x2C  i = i + 1;
+    sendBuf[i] = 0x96  i = i + 1;
+    sendBuf[i] = 0x2C  i = i + 1;
     sendBuf[i] = 0x64  i = i + 1;
-    OUTPORT(sendBuf, "Free Protocol", i)
-    INPORT2(recvBuf, "Free Protocol", recvLen, 500)
+    OUTPORT(sendBuf, "Free Protocol", i);
+    INPORT2(recvBuf, "Free Protocol", recvLen, 500);
     if recvBuf[42] == 0x00 then
-        fo_ok_1 = 1
+        fo_ok_1 = 1;
     else
-        fo_ok_1 = 0
-    end if
-    SetData(fo_ok_1, "Local HMI", LW, 610, 1)
+        fo_ok_1 = 0;
+    end if;
+    SetData(fo_ok_1, "Local HMI", LW, 610, 1);
 
 //----------------------------------------------------------------------
 // STEP 2A: REGISTER SESSION - ADAPTER 2 (192.168.1.5)
 //----------------------------------------------------------------------
 
     PURGE("Free Protocol")
-    FILL(sendBuf, 0, 24)
-    sendBuf[0]  = 0x65
-    sendBuf[1]  = 0x00
-    sendBuf[2]  = 0x04
-    sendBuf[3]  = 0x00
-    sendBuf[20] = 0x01
-    sendBuf[21] = 0x00
-    sendBuf[22] = 0x00
-    sendBuf[23] = 0x00
-    OUTPORT(sendBuf, "Free Protocol", 24)
-    INPORT2(recvBuf, "Free Protocol", recvLen, 500)
-    session_2 = recvBuf[4]
-    session_2 = session_2 + (recvBuf[5] * 256)
-    session_2 = session_2 + (recvBuf[6] * 65536)
-    session_2 = session_2 + (recvBuf[7] * 16777216)
-    SetData(session_2, "Local HMI", LW, 620, 1)
+    FILL(sendBuf, 0, 24);
+    sendBuf[0]  = 0x65;
+    sendBuf[1]  = 0x00;
+    sendBuf[2]  = 0x04;
+    sendBuf[3]  = 0x00;
+    sendBuf[20] = 0x01;
+    sendBuf[21] = 0x00;
+    sendBuf[22] = 0x00;
+    sendBuf[23] = 0x00;
+    OUTPORT(sendBuf, "Free Protocol", 24);
+    INPORT2(recvBuf, "Free Protocol", recvLen, 500);
+    session_2 = recvBuf[4];
+    session_2 = session_2 + (recvBuf[5] * 256);
+    session_2 = session_2 + (recvBuf[6] * 65536);
+    session_2 = session_2 + (recvBuf[7] * 16777216);
+    SetData(session_2, "Local HMI", LW, 620, 1);
 
 //----------------------------------------------------------------------
 // STEP 2B: FORWARD OPEN - ADAPTER 2
-//   Same as Adapter 1 but Connection Serial = 0x0D1B (unique)
+// UNIQUE Connection Serial = 0x0D1B (different from Adapter 1 = 0x0D1A)
 //----------------------------------------------------------------------
 
-    FILL(sendBuf, 0, 128)
-    i = 0
-    sendBuf[i] = 0x6F  i = i + 1
-    sendBuf[i] = 0x00  i = i + 1
-    sendBuf[i] = 0x42  i = i + 1
-    sendBuf[i] = 0x00  i = i + 1
-    sendBuf[i] = session_2 & 0xFF          i = i + 1
-    sendBuf[i] = (session_2 >> 8) & 0xFF   i = i + 1
-    sendBuf[i] = (session_2 >> 16) & 0xFF  i = i + 1
-    sendBuf[i] = (session_2 >> 24) & 0xFF  i = i + 1
-    FILL(sendBuf[i], 0, 16)  i = i + 16
-    FILL(sendBuf[i], 0, 4)   i = i + 4
-    sendBuf[i] = 0x00  i = i + 1
-    sendBuf[i] = 0x00  i = i + 1
-    sendBuf[i] = 0x02  i = i + 1
-    sendBuf[i] = 0x00  i = i + 1
-    FILL(sendBuf[i], 0, 4)   i = i + 4
-    sendBuf[i] = 0xB2  i = i + 1
-    sendBuf[i] = 0x00  i = i + 1
-    sendBuf[i] = 0x32  i = i + 1
-    sendBuf[i] = 0x00  i = i + 1
-    sendBuf[i] = 0x54  i = i + 1
-    sendBuf[i] = 0x02  i = i + 1
-    sendBuf[i] = 0x20  i = i + 1
-    sendBuf[i] = 0x06  i = i + 1
-    sendBuf[i] = 0x24  i = i + 1
-    sendBuf[i] = 0x01  i = i + 1
-    sendBuf[i] = 0x03  i = i + 1
-    sendBuf[i] = 0xFA  i = i + 1
-    FILL(sendBuf[i], 0, 8)   i = i + 8
-    sendBuf[i] = 0x1B  i = i + 1
-    sendBuf[i] = 0x0D  i = i + 1
-    sendBuf[i] = 0x5A  i = i + 1
-    sendBuf[i] = 0x00  i = i + 1
-    sendBuf[i] = 0x44  i = i + 1
-    sendBuf[i] = 0x33  i = i + 1
-    sendBuf[i] = 0x22  i = i + 1
-    sendBuf[i] = 0x11  i = i + 1
-    FILL(sendBuf[i], 0, 4)   i = i + 4
-    sendBuf[i] = 0xA0  i = i + 1
-    sendBuf[i] = 0x86  i = i + 1
-    sendBuf[i] = 0x01  i = i + 1
-    sendBuf[i] = 0x00  i = i + 1
-    sendBuf[i] = 0x0E  i = i + 1
-    sendBuf[i] = 0x40  i = i + 1
-    sendBuf[i] = 0xA0  i = i + 1
-    sendBuf[i] = 0x86  i = i + 1
-    sendBuf[i] = 0x01  i = i + 1
-    sendBuf[i] = 0x00  i = i + 1
-    sendBuf[i] = 0x0A  i = i + 1
-    sendBuf[i] = 0x20  i = i + 1
-    sendBuf[i] = 0x01  i = i + 1
-    sendBuf[i] = 0x04  i = i + 1
-    sendBuf[i] = 0x20  i = i + 1
-    sendBuf[i] = 0x04  i = i + 1
-    sendBuf[i] = 0x24  i = i + 1
-    sendBuf[i] = 0x01  i = i + 1
-    sendBuf[i] = 0x2C  i = i + 1
-    sendBuf[i] = 0x96  i = i + 1
-    sendBuf[i] = 0x2C  i = i + 1
+    FILL(sendBuf, 0, 128);
+    i = 0;
+    sendBuf[i] = 0x6F  i = i + 1;
+    sendBuf[i] = 0x00  i = i + 1;
+    sendBuf[i] = 0x42  i = i + 1;
+    sendBuf[i] = 0x00  i = i + 1;
+    sendBuf[i] = session_2 & 0xFF          i = i + 1;
+    sendBuf[i] = (session_2 >> 8) & 0xFF   i = i + 1;
+    sendBuf[i] = (session_2 >> 16) & 0xFF  i = i + 1;
+    sendBuf[i] = (session_2 >> 24) & 0xFF  i = i + 1;
+    FILL(sendBuf[i], 0, 16)  i = i + 16;
+    FILL(sendBuf[i], 0, 4)   i = i + 4;
+    sendBuf[i] = 0x00  i = i + 1;
+    sendBuf[i] = 0x00  i = i + 1;
+    sendBuf[i] = 0x02  i = i + 1;
+    sendBuf[i] = 0x00  i = i + 1;
+    FILL(sendBuf[i], 0, 4)   i = i + 4;
+    sendBuf[i] = 0xB2  i = i + 1;
+    sendBuf[i] = 0x00  i = i + 1;
+    sendBuf[i] = 0x32  i = i + 1;
+    sendBuf[i] = 0x00  i = i + 1;
+    sendBuf[i] = 0x54  i = i + 1;
+    sendBuf[i] = 0x02  i = i + 1;
+    sendBuf[i] = 0x20  i = i + 1;
+    sendBuf[i] = 0x06  i = i + 1;
+    sendBuf[i] = 0x24  i = i + 1;
+    sendBuf[i] = 0x01  i = i + 1;
+    sendBuf[i] = 0x03  i = i + 1;
+    sendBuf[i] = 0xFA  i = i + 1;
+    FILL(sendBuf[i], 0, 4)   i = i + 4;
+    FILL(sendBuf[i], 0, 4)   i = i + 4;
+    // UNIQUE Serial for Adapter 2
+    sendBuf[i] = 0x1B  i = i + 1;
+    sendBuf[i] = 0x0D  i = i + 1;
+    sendBuf[i] = 0x5A  i = i + 1;
+    sendBuf[i] = 0x00  i = i + 1;
+    sendBuf[i] = 0x44  i = i + 1;
+    sendBuf[i] = 0x33  i = i + 1;
+    sendBuf[i] = 0x22  i = i + 1;
+    sendBuf[i] = 0x11  i = i + 1;
+    FILL(sendBuf[i], 0, 4)   i = i + 4;
+    sendBuf[i] = 0xA0  i = i + 1;
+    sendBuf[i] = 0x86  i = i + 1;
+    sendBuf[i] = 0x01  i = i + 1;
+    sendBuf[i] = 0x00  i = i + 1;
+    // O->T Params: 0x4008 - EDS CORRECTED
+    sendBuf[i] = 0x08  i = i + 1;
+    sendBuf[i] = 0x40  i = i + 1;
+    sendBuf[i] = 0xA0  i = i + 1;
+    sendBuf[i] = 0x86  i = i + 1;
+    sendBuf[i] = 0x01  i = i + 1;
+    sendBuf[i] = 0x00  i = i + 1;
+    // T->O Params: 0x2008 - EDS CORRECTED
+    sendBuf[i] = 0x08  i = i + 1;
+    sendBuf[i] = 0x20  i = i + 1;
+    sendBuf[i] = 0x01  i = i + 1;
+    sendBuf[i] = 0x04  i = i + 1;
+    sendBuf[i] = 0x20  i = i + 1;
+    sendBuf[i] = 0x04  i = i + 1;
+    sendBuf[i] = 0x24  i = i + 1;
+    sendBuf[i] = 0x05  i = i + 1;
+    sendBuf[i] = 0x2C  i = i + 1;
+    sendBuf[i] = 0x96  i = i + 1;
+    sendBuf[i] = 0x2C  i = i + 1;
     sendBuf[i] = 0x64  i = i + 1;
-    OUTPORT(sendBuf, "Free Protocol", i)
-    INPORT2(recvBuf, "Free Protocol", recvLen, 500)
+    OUTPORT(sendBuf, "Free Protocol", i);
+    INPORT2(recvBuf, "Free Protocol", recvLen, 500);
     if recvBuf[42] == 0x00 then
-        fo_ok_2 = 1
+        fo_ok_2 = 1;
     else
-        fo_ok_2 = 0
-    end if
+        fo_ok_2 = 0;
+    end if;
     SetData(fo_ok_2, "Local HMI", LW, 630, 1);
 
 //----------------------------------------------------------------------
-// STEP 3: SIGNAL M_COM_CARD_1 AND M_COM_CARD_2 THAT SESSION IS READY
-// Set LB 0 = 1 to allow cyclic macros to start polling
+// STEP 3: SET READY FLAG
+// LB0=1 -> Both sessions OK, cyclic macros can start
+// LB0=0 -> Session failed, check LW610 / LW630
 //----------------------------------------------------------------------
 
     if fo_ok_1 == 1 and fo_ok_2 == 1 then
-        SetData(1, "Local HMI", LB, 0, 1)   // LB0 = Sessions Ready Flag
+        SetData(1, "Local HMI", LB, 0, 1);
     else
-        SetData(0, "Local HMI", LB, 0, 1)
+        SetData(0, "Local HMI", LB, 0, 1);
     end if
 
 end macro_command
