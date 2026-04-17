@@ -1,0 +1,75 @@
+macro_command main()
+
+//===========================================================================
+// M_COM_CARD_2.txt
+// CMT3072XP - COMPACTCOM ADAPTER 2 CYCLIC I/O MACRO
+// PURPOSE  : Cyclic read inputs / write outputs for Adapter 2
+// RUN TYPE : Cyclic - every 200ms
+// DEVICE   : "COM_CARD_2"  IP: 192.168.1.5
+// REQUIRES : M_ETH_DRIVER must have run first (LB0 = 1 = sessions ready)
+// T->O     : Instance 0x64 (100), 5 words READ  -> LW 200-204
+// O->T     : Instance 0x96 (150), 7 words WRITE <- LW 400-406
+// IDENTITY : Class 1, Instance 1           -> LW 210-213
+// STATUS   : Connection Online/Offline      -> LW 641
+//===========================================================================
+
+    unsigned int Q_2
+    unsigned int W_2
+    unsigned int E_2
+    unsigned int R_2
+    unsigned int T_2
+    unsigned int OUT2_0
+    unsigned int OUT2_1
+    unsigned int OUT2_2
+    unsigned int OUT2_3
+    unsigned int OUT2_4
+    unsigned int OUT2_5
+    unsigned int OUT2_6
+    unsigned int ID_V2
+    unsigned int ID_P2
+    unsigned int ID_ST2
+    unsigned int ID_STA2
+    short CONN_2
+    short READY
+
+    GetData(READY, "Local HMI", LB, 0, 1)
+    if READY == 0 then
+        SetData(0, "Local HMI", LW, 641, 1)
+    else
+        GetData(ID_V2,   "COM_CARD_2", "VENDOR ID{1,1,1}",    1)
+        GetData(ID_P2,   "COM_CARD_2", "PRODUCT_CODE{1,1,3}", 1)
+        GetData(ID_ST2,  "COM_CARD_2", "STATUS{1,1,5}",       1)
+        GetData(ID_STA2, "COM_CARD_2", "STATE{1,1,8}",        1)
+        SetData(ID_V2,   "Local HMI", LW, 210, 1)
+        SetData(ID_P2,   "Local HMI", LW, 211, 1)
+        SetData(ID_ST2,  "Local HMI", LW, 212, 1)
+        SetData(ID_STA2, "Local HMI", LW, 213, 1)
+        GetData(Q_2, "COM_CARD_2", "READ{4,100,3}[0]", 1)
+        GetData(W_2, "COM_CARD_2", "READ{4,100,3}[1]", 1)
+        GetData(E_2, "COM_CARD_2", "READ{4,100,3}[2]", 1)
+        GetData(R_2, "COM_CARD_2", "READ{4,100,3}[3]", 1)
+        GetData(T_2, "COM_CARD_2", "READ{4,100,3}[4]", 1)
+        SetData(Q_2, "Local HMI", LW, 200, 1)
+        SetData(W_2, "Local HMI", LW, 201, 1)
+        SetData(E_2, "Local HMI", LW, 202, 1)
+        SetData(R_2, "Local HMI", LW, 203, 1)
+        SetData(T_2, "Local HMI", LW, 204, 1)
+        GetData(OUT2_0, "Local HMI", LW, 400, 1)
+        GetData(OUT2_1, "Local HMI", LW, 401, 1)
+        GetData(OUT2_2, "Local HMI", LW, 402, 1)
+        GetData(OUT2_3, "Local HMI", LW, 403, 1)
+        GetData(OUT2_4, "Local HMI", LW, 404, 1)
+        GetData(OUT2_5, "Local HMI", LW, 405, 1)
+        GetData(OUT2_6, "Local HMI", LW, 406, 1)
+        SetData(OUT2_0, "COM_CARD_2", "SEND{4,150,3}[0]", 1)
+        SetData(OUT2_1, "COM_CARD_2", "SEND{4,150,3}[1]", 1)
+        SetData(OUT2_2, "COM_CARD_2", "SEND{4,150,3}[2]", 1)
+        SetData(OUT2_3, "COM_CARD_2", "SEND{4,150,3}[3]", 1)
+        SetData(OUT2_4, "COM_CARD_2", "SEND{4,150,3}[4]", 1)
+        SetData(OUT2_5, "COM_CARD_2", "SEND{4,150,3}[5]", 1)
+        SetData(OUT2_6, "COM_CARD_2", "SEND{4,150,3}[6]", 1)
+        CONN_2 = GetDevice("COM_CARD_2")
+        SetData(CONN_2, "Local HMI", LW, 641, 1)
+    end if
+
+end macro_command
